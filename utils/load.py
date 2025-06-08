@@ -11,24 +11,36 @@ def load_jsonl(path: str) -> List[Dict]:
 
 def flatten(dataset: List[Dict]) -> pd.DataFrame:
     """
-    入れ子構造のデータセットを評価者ごとのDataFrameに変換する。
+    ネスト構造（original_textごとにsimplified_listを持つ形式）を、
+    評価者ごとに展開したpandas DataFrameに変換する。
     """
     rows = []
     for entry in dataset:
-        for ann in entry["annotations"]:
-            row = {
-                "original_id": entry["original_id"],
-                "simplified_id": entry["simplified_id"],
-                "model_name": entry["model_name"],
-                "original_text": entry["original_text"],
-                "simplified_text": entry["simplified_text"],
-                "evaluator_id": ann["evaluator_id"],
-                "data_source": ann["data_source"],
-                "necessity": ann["criterion_scores"]["necessity"],
-                "sufficiency": ann["criterion_scores"]["sufficiency"],
-                "sentence_simplicity": ann["criterion_scores"]["sentence_simplicity"],
-                "document_simplicity": ann["criterion_scores"]["document_simplicity"],
-            }
-            rows.append(row)
-    return pd.DataFrame(rows)
+        original_id = entry["original_id"]
+        original_text = entry["original_text"]
 
+        for sim in entry["simplified_list"]:
+            simplified_id = sim["simplified_id"]
+            model_name = sim["model_name"]
+            simplified_text = sim["simplified_text"]
+
+            # 評価者順で整列（保証されていない場合に備えて）
+            sorted_annotations = sorted(sim.get("annotations", []), key=lambda x: x["evaluator_id"])
+
+            for ann in sorted_annotations:
+                scores = ann["scores"]
+                row = {
+                    "original_id": original_id,
+                    "simplified_id": simplified_id,
+                    "model_name": model_name,
+                    "original_text": original_text,
+                    "simplified_text": simplified_text,
+                    "evaluator_id": ann["evaluator_id"],
+                    "necessity": scores.get("necessity"),
+                    "sufficiency": scores.get("sufficiency"),
+                    "sentence_simplicity": scores.get("sentence_simplicity"),
+                    "document_simplicity": scores.get("document_simplicity")
+                }
+                rows.append(row)
+
+    return pd.DataFrame(rows)
