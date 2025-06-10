@@ -13,13 +13,14 @@ def flatten(dataset: List[Dict]) -> pd.DataFrame:
     """
     ネスト構造（original_textごとにsimplified_listを持つ形式）を、
     評価者ごとに展開したpandas DataFrameに変換する。
+    入力の annotations はフラット構造（scoresキーなし）を想定。
     """
     rows = []
     for entry in dataset:
         original_id = entry["original_id"]
         original_text = entry["original_text"]
 
-        for sim in entry["simplified_list"]:
+        for sim in entry.get("simplified_list", []):
             simplified_id = sim["simplified_id"]
             model_name = sim["model_name"]
             simplified_text = sim["simplified_text"]
@@ -28,7 +29,6 @@ def flatten(dataset: List[Dict]) -> pd.DataFrame:
             sorted_annotations = sorted(sim.get("annotations", []), key=lambda x: x["evaluator_id"])
 
             for ann in sorted_annotations:
-                scores = ann["scores"]
                 row = {
                     "original_id": original_id,
                     "simplified_id": simplified_id,
@@ -36,10 +36,10 @@ def flatten(dataset: List[Dict]) -> pd.DataFrame:
                     "original_text": original_text,
                     "simplified_text": simplified_text,
                     "evaluator_id": ann["evaluator_id"],
-                    "necessity": scores.get("necessity"),
-                    "sufficiency": scores.get("sufficiency"),
-                    "sentence_simplicity": scores.get("sentence_simplicity"),
-                    "document_simplicity": scores.get("document_simplicity")
+                    "necessity": ann.get("necessity"),
+                    "sufficiency": ann.get("sufficiency"),
+                    "sentence_simplicity": ann.get("sentence_simplicity"),
+                    "document_simplicity": ann.get("document_simplicity")
                 }
                 rows.append(row)
 

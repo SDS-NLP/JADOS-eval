@@ -26,12 +26,10 @@
       "annotations": [
         {
           "evaluator_id": 1,
-          "scores": {
-            "necessity": 1,
-            "sufficiency": 2,
-            "sentence_simplicity": 2,
-            "document_simplicity": 3
-          }
+          "necessity": 1,
+          "sufficiency": 2,
+          "sentence_simplicity": 2,
+          "document_simplicity": 3
         },
         ...
       ]
@@ -43,12 +41,10 @@
       "annotations": [
         {
           "evaluator_id": 1,
-          "scores": {
-            "necessity": 1,
-            "sufficiency": 3,
-            "sentence_simplicity": 3,
-            "document_simplicity": 3
-          }
+          "necessity": 1,
+          "sufficiency": 3,
+          "sentence_simplicity": 3,
+          "document_simplicity": 3
         },
         ...
       ]
@@ -79,22 +75,16 @@
 | フィールド名 | 階層 | 型 | 説明 |
 |--------------|------|----|------|
 | `evaluator_id` | annotations[j] | int | 評価者のID |
-| `scores` | annotations[j] | dict | 各評価観点のスコア（0〜3の整数） |
-
-##### scores の要素
-
-| フィールド名 | 階層 | 型 | 説明 |
-|--------------|------|----|------|
-| `necessity` | scores | bool | 物事を説明する文章として体裁を保っているかどうか |
-| `sufficiency` | scores | int | (1-3)元の文章の趣旨を保持しているか|
-| `sentence_simplicity` | scores | int | (1-3)文単位での読みやすさ・単純さ |
-| `document_simplicity` | scores | int | (1-3)文章全体としての平易さ |
+| `necessity` | annotations[j] | bool | 物事を説明する文章として体裁を保っているかどうか |
+| `sufficiency` | annotations[j] | int | (1-3)元の文章の趣旨を保持しているか|
+| `sentence_simplicity` | annotations[j] | int | (1-3)文単位での読みやすさ・単純さ |
+| `document_simplicity` | annotations[j] | int | (1-3)文章全体としての平易さ |
 
 
 ##### model_name が表すモデルの詳細
 | モデル名 | リンク | 説明 |
 |--------------|------|------|
-| bart| [link](https://huggingface.co/ku-nlp/bart-large-japanese) | `ku-nlp/bart-large-japanese`をJADOSデータセットのtrainデータで訓練したモデル |
+| bart| [link](https://huggingface.co/ku-nlp/bart-large-japanese) | `ku-nlp/bart-large-japanese`をJADOSデータセットのtrainデータで訓練したEnc-Decモデル |
 | gemma  | [link](https://huggingface.co/google/gemma-2-9b-it) | `google/gemma-2-9b-itを利用` |
 | GPT-4o_0-shot| [link](https://platform.openai.com/docs/models/gpt-4o) | `gpt-4o-2024-11-20`を利用．平易化の例を1件与えた1-shotの設定における生成結果|
 | GPT-4o_1-shot | [link](https://platform.openai.com/docs/models/gpt-4o) | `gpt-4o-2024-11-20`を利用 |
