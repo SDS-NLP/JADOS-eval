@@ -200,6 +200,5 @@ Each line has the following nested structure (excerpt):
 
 ```text
 Please convert the following article into one that is easy for elementary school students to understand. Summarize it into a short article of around 150 Japanese characters, and replace difficult expressions with simpler ones or add supplementary explanations where necessary.
-
-{original_text}
+\n{original_text}
 ```
